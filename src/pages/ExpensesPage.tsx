@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { fetchExpenses } from '../api/expenses'
 import type { Expense } from '../types/expense'
 
@@ -13,9 +13,18 @@ function formatDateBR(iso: string) {
   return d.toLocaleDateString('pt-BR')
 }
 
+function StatusBadge({ status }: { status: Expense['status'] }) {
+  const cls = status === 'Pago' ? 'badge badge-paid' : 'badge badge-pending'
+  return <span className={cls} aria-label={`Status: ${status}`}>{status}</span>
+}
+
 export default function ExpensesPage() {
   const [data, setData] = useState<Expense[]>([])
   const [loading, setLoading] = useState(true)
+  const totalCents = useMemo(
+    () => data.reduce((acc, item) => acc + item.valorCentavos, 0),
+    [data],
+  )
 
   useEffect(() => {
     let active = true
@@ -31,17 +40,13 @@ export default function ExpensesPage() {
 
   if (loading) {
     return (
-      <main className="container">
-        <p>Carregando…</p>
-      </main>
+        <div className="panel table-scroll" />
     )
   }
 
   return (
-    <main className="container">
-      <h1>Gastos do mês</h1>
-      <div className="table-wrapper">
-        <table className="expenses-table">
+      <div className="panel table-scroll">
+        <table className="expenses-table" aria-label="Tabela de gastos do mês">
           <thead>
             <tr>
               <th>Nome</th>
@@ -60,13 +65,13 @@ export default function ExpensesPage() {
                   <time dateTime={item.dataISO}>{formatDateBR(item.dataISO)}</time>
                 </td>
                 <td>{item.categoria}</td>
-                <td>{item.status}</td>
+                <td>
+                  <StatusBadge status={item.status} />
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-    </main>
   )
 }
-
