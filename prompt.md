@@ -1,0 +1,1 @@
+eu uero somente oq tem no /Users/erikbarroso/projetos/fluxo-trabalho-ia-rocketseat/resumo-mensal-ideias.md, nada mais nada menos, n quero acessiblidade, nem filtros nem responsibidadenem csv, nem testes, é algo simples. Olhe em src e os mocks src/mocks/expenses.ts, caso precise fazer um filtro, n faça, coloque todas os mocks com um único mês para facilitar

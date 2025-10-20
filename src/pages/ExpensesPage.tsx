@@ -1,12 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { fetchExpenses } from '../api/expenses'
+import { formatCurrencyBRL } from '../utils/format'
+import MasterPage from '../components/layout/MasterPage'
+import FinancasHeader from '../components/financas/FinancasHeader'
+import MonthlySummary from '../components/financas/MonthlySummary'
 import type { Expense } from '../types/expense'
-
-function formatCurrencyBRL(cents: number) {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(
-    cents / 100,
-  )
-}
 
 function formatDateBR(iso: string) {
   const d = new Date(iso + 'T00:00:00')
@@ -40,11 +38,16 @@ export default function ExpensesPage() {
 
   if (loading) {
     return (
+      <MasterPage header={<FinancasHeader />}>
         <div className="panel table-scroll" />
+      </MasterPage>
     )
   }
 
   return (
+    <MasterPage header={<FinancasHeader />}>
+      <MonthlySummary expenses={data} />
+
       <div className="panel table-scroll">
         <table className="expenses-table" aria-label="Tabela de gastos do mês">
           <thead>
@@ -73,5 +76,6 @@ export default function ExpensesPage() {
           </tbody>
         </table>
       </div>
+    </MasterPage>
   )
 }
